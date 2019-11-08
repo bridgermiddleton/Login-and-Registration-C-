@@ -1,0 +1,18 @@
+@model LoginCredentials;
+<div class="container">
+    <a href="/">Register</a>
+    <h2>Login to this Cool Site!</h2>
+    <form asp-action="Login" asp-controller="Home" method="POST">
+        <div class="row">
+            <div class="col-3 form-group">
+                <span asp-validation-for="EmailAddress"></span>
+                Email<input class="form-control" asp-for="EmailAddress">
+                <span asp-validation-for="Password"></span>
+                Password<input class="form-control" asp-for="Password">
+                <button style="margin-top: 20px;" class="btn btn-primary">Login</button>
+            </div>
+        </div>
+        
+
+    </form>
+</div>
