@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using LoginAndReg.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
 
 namespace LoginAndReg.Controllers
@@ -38,6 +39,7 @@ namespace LoginAndReg.Controllers
                 newuser.Password = Hasher.HashPassword(newuser, newuser.Password);
                 dbContext.Add(newuser);
                 dbContext.SaveChanges();
+                HttpContext.Session.SetInt32("user_id", newuser.UserId);
                 return RedirectToAction("SuccessPage");
             }
             return View("RegisterPage");
@@ -65,6 +67,7 @@ namespace LoginAndReg.Controllers
                     ModelState.AddModelError("Password", "Invalid Email/Password");
                     return View("LoginPage");
                 }
+                HttpContext.Session.SetInt32("user_id", userInDb.UserId);
                 return RedirectToAction("SuccessPage");
             }
             return View("LoginPage");
@@ -72,7 +75,18 @@ namespace LoginAndReg.Controllers
         [HttpGet("success")]
         public IActionResult SuccessPage()
         {
-            return View();
+            if (HttpContext.Session.GetInt32("user_id") != null)
+            {
+                return View(); 
+            }
+            return View("RegisterPage");
+            
+        }
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("RegisterPage");
         }
 
         public IActionResult Index()
